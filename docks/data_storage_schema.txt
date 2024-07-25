@@ -1,0 +1,9 @@
+- data
+  |- meta_data.json
+  |- tags.json
+  |- unsorted.json
+  |- images
+      |- imgs_0_9999.json
+      |- imgs_10000_19999.json
+      |- imgs_20000_29999.json
+      ...
