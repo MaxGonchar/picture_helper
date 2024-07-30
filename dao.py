@@ -99,10 +99,10 @@ if __name__ == "__main__":
 
     # print(ImgFile("imgs-1760000-1769999.json").content)
 
-    i = 0
-    for img in get_images():
-        i += 1
-        print(img)
-        if i == 3:
-            break
-    print(i)
+    # i = 0
+    # for img in get_images():
+    #     i += 1
+    #     print(img)
+    #     if i == 3:
+    #         break
+    # print(i)
