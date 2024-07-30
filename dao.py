@@ -2,10 +2,18 @@ import os
 from typing import Iterator
 from os.path import join
 import json
+from dataclasses import dataclass
 
 DATA_FOLDER = "data"
 IMGS_FOLDER = "images"
 TAGS_FILE = "tags.json"
+
+
+@dataclass
+class Img:
+    id: str
+    tags: list[str]
+    is_good: bool
 
 
 class ImgFile:
@@ -46,7 +54,8 @@ class ImagesIterator:
         self.images = iter(file.content.items())
     
     def _next_img(self) -> dict:
-        return dict([next(self.images)])
+        id_, content = next(self.images)
+        return Img(id_, content["tags"], content["isGood"])
     
     def __iter__(self):
         return self
@@ -93,5 +102,7 @@ if __name__ == "__main__":
     # i = 0
     # for img in get_images():
     #     i += 1
-    #     print(list(img.keys()))
+    #     print(img)
+    #     if i == 3:
+    #         break
     # print(i)
