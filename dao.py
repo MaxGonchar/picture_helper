@@ -4,9 +4,7 @@ from os.path import join
 import json
 from dataclasses import dataclass
 
-DATA_FOLDER = "data"
-IMGS_FOLDER = "images"
-TAGS_FILE = "tags.json"
+from configs import DATA_FOLDER, IMGS_FOLDER, TAGS_FILE
 
 
 @dataclass
@@ -78,7 +76,10 @@ def save_image(img: dict):
     pass
 
 
-def save_unsorted_image(img: dict):
+def save_unsorted_image(img: dict, liklihood: float):
+    print(f"Saving image with liklihood {liklihood}")
+    from pprint import pprint
+    pprint(img)
     pass
 
 
