@@ -10,3 +10,4 @@ def get_html(url: str) -> str | None:
     response.raise_for_status()
     if response.status_code == 200:
         return response.text
+    print(f"Failed to get html from {url}, status code {response.status_code}")
