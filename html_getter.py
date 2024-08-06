@@ -5,7 +5,9 @@ headers = {
 }
 
 
-def get_html(url: str) -> str:
-    response = requests.get(url, headers=headers)
+def get_html(url: str) -> str | None:
+    response = requests.get(url, headers=headers, allow_redirects=False)
     response.raise_for_status()
-    return response.text
+    if response.status_code == 200:
+        return response.text
+    print(f"Failed to get html from {url}, status code {response.status_code}")

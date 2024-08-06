@@ -4,9 +4,10 @@ from os.path import join
 import json
 from dataclasses import dataclass
 
-DATA_FOLDER = "data"
-IMGS_FOLDER = "images"
-TAGS_FILE = "tags.json"
+import joblib
+from sklearn.linear_model import LogisticRegression
+
+from configs import DATA_FOLDER, IMGS_FOLDER, TAGS_FILE, ID_FILE, MODEL_FILE, UNSORTED_IMGS_FILE
 
 
 @dataclass
@@ -14,6 +15,20 @@ class Img:
     id: str
     tags: list[str]
     is_good: bool
+
+
+class ImgID:
+    def __enter__(self):
+        with open(join(DATA_FOLDER, ID_FILE), "r") as file:
+            self.id = int(file.read()) + 1
+        return self.id
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if not exc_type:
+            with open(join(DATA_FOLDER, ID_FILE), "w") as file:
+                file.write(str(self.id))
+        else:
+            raise exc_type(exc_val)
 
 
 class ImgFile:
@@ -79,13 +94,23 @@ def save_image(img: dict):
 
 
 def save_unsorted_image(img: dict):
-    pass
+    with open(join(DATA_FOLDER, UNSORTED_IMGS_FILE), "r") as file:
+        data = json.load(file)
+
+    data.append(img)
+
+    with open(join(DATA_FOLDER, UNSORTED_IMGS_FILE), "w") as file:
+        json.dump(data, file)
 
 
 def get_images(folder: str | None = None) -> Iterator:
     folder = folder or join(DATA_FOLDER, IMGS_FOLDER)
     files = [ImgFile(f) for f in os.listdir(folder)]
     return ImagesIterator(files)
+
+
+def get_predictor() -> LogisticRegression:
+    return joblib.load(MODEL_FILE)
 
 if __name__ == "__main__":
     assert ImgFile("imgs-0-9999.json")._num() == 0

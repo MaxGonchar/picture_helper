@@ -7,3 +7,6 @@ data
 data_backups
 
 dev_script.py
+
+images.csv
+model.joblib
