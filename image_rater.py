@@ -16,7 +16,7 @@ def rate_image():
 
         if html := get_html(url):
             img_data = parse_html(html)
-            is_good, likelihood = predict_likelihood_of_image({img_data["id"]: img_data["tags"]})
+            is_good, likelihood = predict_likelihood_of_image(img_data["tags"])
             print(img_data["id"], colored(is_good, "green" if is_good else "red"), likelihood)
             dao.save_unsorted_image(prepare_unsorted_img(img_data, is_good, likelihood))
 
@@ -28,4 +28,4 @@ def main(number: int) -> None:
 
 
 if __name__ == "__main__":
-    main(5)
+    main(1)
