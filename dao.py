@@ -7,7 +7,8 @@ from dataclasses import dataclass
 import joblib
 from sklearn.linear_model import LogisticRegression
 
-from configs import DATA_FOLDER, IMGS_FOLDER, TAGS_FILE, ID_FILE, MODEL_FILE, UNSORTED_IMGS_FILE
+from configs import DATA_FOLDER, IMGS_FOLDER, TAGS_FILE, ID_FILE, MODEL_FILE, UNSORTED_IMGS_FILE, TAGS_USED_FOR_TRAINING_FILE
+from utils import get_img_id, generate_file_name
 
 
 @dataclass
@@ -17,7 +18,7 @@ class Img:
     is_good: bool
 
 
-class ImgID:
+class NextImgID:
     def __enter__(self):
         with open(join(DATA_FOLDER, ID_FILE), "r") as file:
             self.id = int(file.read()) + 1
@@ -49,6 +50,9 @@ class ImgFile:
     
     @property
     def content(self):
+        if not os.path.exists(self.path):
+            return {}
+
         with open(self.path, "r") as f:
             return json.load(f)
     
@@ -83,14 +87,45 @@ class ImagesIterator:
             return self._next_img()
 
 
+class UnsortedImages:
+    def __init__(self) -> None:
+        self.path = join(DATA_FOLDER, UNSORTED_IMGS_FILE)
+    
+    def get_next(self) -> dict:
+        with open(self.path, "r") as f:
+            data = json.load(f)
+        return data[0] if data else None
+
+
 def get_all_tags() -> list[str]:
     path = join(DATA_FOLDER, TAGS_FILE)
     with open(path, "r") as file:
         return json.load(file)
 
 
+def get_tags_used_for_training() -> list[str]:
+    path = join(DATA_FOLDER, TAGS_USED_FOR_TRAINING_FILE)
+    with open(path, "r") as file:
+        return json.load(file)
+
+
+def update_tags(tags: list[str]) -> None:
+    existing_tags = get_all_tags()
+
+    for tag in tags:
+        if tag not in existing_tags:
+            existing_tags.append(tag)
+    
+    with open(join(DATA_FOLDER, TAGS_FILE), "w") as file:
+        json.dump(existing_tags, file)
+
+
 def save_image(img: dict):
-    pass
+    img_id = get_img_id(img)
+    file = ImgFile(generate_file_name(int(img_id)))
+    content = file.content
+    content.update(img)
+    file.content = content
 
 
 def save_unsorted_image(img: dict):
@@ -98,6 +133,16 @@ def save_unsorted_image(img: dict):
         data = json.load(file)
 
     data.append(img)
+
+    with open(join(DATA_FOLDER, UNSORTED_IMGS_FILE), "w") as file:
+        json.dump(data, file)
+
+
+def delete_unsorted_image(img: dict):
+    with open(join(DATA_FOLDER, UNSORTED_IMGS_FILE), "r") as file:
+        data = json.load(file)
+
+    data.remove(img)
 
     with open(join(DATA_FOLDER, UNSORTED_IMGS_FILE), "w") as file:
         json.dump(data, file)
