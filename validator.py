@@ -1,34 +1,25 @@
 from copy import deepcopy
 from dao import UnsortedImages, save_image, update_tags, delete_unsorted_image
 from configs import URL
-from pprint import pprint
-from utils import get_img_id
 from termcolor import colored
+from ph_types import UnsortedImgType
 
 
-def parse_unsorted_image(unsorted_image: dict) -> tuple[str, bool, float]:
-    url, is_good, likelihood = "", False, 0.0
-
-    for key in unsorted_image.keys():
-        match key:
-            case "isGood":
-                is_good = unsorted_image[key]
-            case "likelihood":
-                likelihood = unsorted_image[key]
-            case _ :
-                url = URL.format(id=key)
-
-    return url, is_good, likelihood
+def parse_unsorted_image(unsorted_image: UnsortedImgType) -> tuple[str, bool, float]:
+    return (
+        URL.format(id=unsorted_image["id"]),
+        unsorted_image["isGood"],
+        unsorted_image["likelihood"]
+    )
 
 
-def prepare_sorted_img(unsorted_image: dict, is_good: bool) -> dict:
-    img_id = get_img_id(unsorted_image)
-    img = {img_id: {}}
-    for k, v in unsorted_image.items():
-        if k == "isGood":
-            img[img_id][k] = is_good
-        elif k.isnumeric():
-            img[img_id]["tags"] = deepcopy(v)
+def prepare_sorted_img(unsorted_image: UnsortedImgType, is_good: bool) -> dict:
+    img = {
+        unsorted_image["id"]: {
+            "tags": deepcopy(unsorted_image["tags"]),
+            "isGood": is_good
+        }
+    }
     return img
 
 
