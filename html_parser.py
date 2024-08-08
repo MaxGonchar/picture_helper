@@ -6,7 +6,8 @@ from bs4 import BeautifulSoup
 def parse_html(html: str) -> dict:
     soup = BeautifulSoup(html, 'html.parser')
     return {
-        _get_id(soup): _get_tags(soup)
+        "id": _get_id(soup),
+        "tags": _get_tags(soup)
     }
 
 
