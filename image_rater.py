@@ -28,4 +28,4 @@ def main(number: int) -> None:
 
 
 if __name__ == "__main__":
-    main(1)
+    main(1000)

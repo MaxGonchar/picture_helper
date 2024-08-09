@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ImhHelper</title>
+    <style>
+        .main {
+            display: flex;
+        }
+        .left-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 200px;
+            height: 100vh;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }
+        .prediction {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: {{ 'green' if session.next_unsorted_image['isGood'] else 'red' }};
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        img {
+            width: auto;
+            max-height: 900px;
+        }
+        button {
+            width: 100px;
+            height: 50px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="left-sidebar">
+            <p>ID: {{ session.next_unsorted_image['id'] }}</p>
+            <p class="prediction">{{ session.next_unsorted_image['isGood'] }} {{ session.next_unsorted_image['likelihood'] }}</p>
+            <form method="post" action="{{url_for('index')}}">
+                <button name="feedback" value="good" style="background-color: green;">GOOD</button>
+                <button name="feedback" value="bad" style="background-color: red;">BAD</button>
+            </form>
+            <a href="{{ session.img_url }}" target="_blank">____to site____</a>
+        </div>
+        <div>
+            <!-- <img id="myImage" src="{{ session.next_unsorted_image['imgUrl'] }}"> -->
+            <img id="myImage" src="data:image/jpg;base64, {{ img_content }}">
+        </div>
+    </div>
+</body>
+
+
+</html>

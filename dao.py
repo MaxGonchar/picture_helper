@@ -95,6 +95,15 @@ class UnsortedImages:
         with open(self.path, "r") as f:
             data = json.load(f)
         return data[0] if data else None
+    
+    def delete_unsorted_image(self, img: dict):
+        with open(self.path, "r") as file:
+            data = json.load(file)
+
+        data.remove(img)
+
+        with open(self.path, "w") as file:
+            json.dump(data, file)
 
 
 def get_all_tags() -> list[str]:
