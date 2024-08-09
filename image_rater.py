@@ -5,6 +5,7 @@ from predictor import predict_likelihood_of_image
 import dao
 from img_data_transformer import prepare_unsorted_img
 from time import sleep
+from termcolor import colored
 
 SLEEP_TIME = 1
 
@@ -15,11 +16,16 @@ def rate_image():
 
         if html := get_html(url):
             img_data = parse_html(html)
-            is_good, likelihood = predict_likelihood_of_image(img_data)
+            is_good, likelihood = predict_likelihood_of_image(img_data["tags"])
+            print(img_data["id"], colored(is_good, "green" if is_good else "red"), likelihood)
             dao.save_unsorted_image(prepare_unsorted_img(img_data, is_good, likelihood))
 
 
-if __name__ == "__main__":
-    for _ in range(900):
+def main(number: int) -> None:
+    for _ in range(number):
         rate_image()
         sleep(SLEEP_TIME)
+
+
+if __name__ == "__main__":
+    main(1000)
