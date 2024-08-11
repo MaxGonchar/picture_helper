@@ -41,12 +41,13 @@ def index():
         delete_unsorted_image(feedback_img)
         return redirect(url_for('index'))
 
-    next_unsorted_image = unsorted_images.get_next()
+    next_unsorted_image = unsorted_images.get_next(order_by="likelihood")
 
     if not next_unsorted_image:
         abort(404)
 
     session["next_unsorted_image"] = next_unsorted_image
+    session["total_unsorted_images"] = unsorted_images.total
     session["img_url"] = URL.format(id=next_unsorted_image["id"])
     img_content = download_img(next_unsorted_image["imgUrl"])
     encoded_image = base64.b64encode(img_content).decode('utf-8')

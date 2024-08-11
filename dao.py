@@ -90,11 +90,21 @@ class ImagesIterator:
 class UnsortedImages:
     def __init__(self) -> None:
         self.path = join(DATA_FOLDER, UNSORTED_IMGS_FILE)
+        self.total = None
     
-    def get_next(self) -> dict:
+    def get_next(self, order_by: str | None = None) -> dict:
         with open(self.path, "r") as f:
             data = json.load(f)
-        return data[0] if data else None
+        
+        self.total = len(data)
+
+        if order_by is None:
+            return data[0] if data else None
+        elif order_by == "likelihood":
+            data = sorted(data, key=lambda x: x["likelihood"], reverse=True)
+            return data[0] if data else None
+        else:
+            raise ValueError(f"Unknown order_by value: {order_by}")
     
     def delete_unsorted_image(self, img: dict):
         with open(self.path, "r") as file:

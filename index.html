@@ -44,6 +44,9 @@
     <div class="main">
         <div class="left-sidebar">
             <p>ID: {{ session.next_unsorted_image['id'] }}</p>
+            {% if session.total_unsorted_images %}
+                <p>Total: {{ session.total_unsorted_images }}</p>
+            {% endif %}
             <p class="prediction">{{ session.next_unsorted_image['isGood'] }} {{ session.next_unsorted_image['likelihood'] }}</p>
             <form method="post" action="{{url_for('index')}}">
                 <button name="feedback" value="good" style="background-color: green;">GOOD</button>
