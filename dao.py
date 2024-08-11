@@ -174,7 +174,7 @@ def get_images(folder: str | None = None) -> Iterator:
 
 
 def get_predictor() -> LogisticRegression:
-    return joblib.load(MODEL_FILE)
+    return joblib.load(join(DATA_FOLDER, MODEL_FILE))
 
 if __name__ == "__main__":
     assert ImgFile("imgs-0-9999.json")._num() == 0

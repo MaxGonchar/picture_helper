@@ -1,14 +1,16 @@
 import csv
+from os.path import join
 
 import dao
 from utils import hash_tag
+from configs import IMAGES_CSV_FILE, DATA_FOLDER
 
 tags = [hash_tag(tag) for tag in dao.get_all_tags()] + ["is_good"]
 
 if len(tags) != len(set(tags)):
     raise Exception("Duplicate headers found")
 
-with open('images.csv', 'w', newline='') as file:
+with open(join(DATA_FOLDER, IMAGES_CSV_FILE), 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(tags)
 
