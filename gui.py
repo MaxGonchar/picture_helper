@@ -49,9 +49,15 @@ def index():
     session["next_unsorted_image"] = next_unsorted_image
     session["total_unsorted_images"] = unsorted_images.total
     session["img_url"] = URL.format(id=next_unsorted_image["id"])
-    img_content = download_img(next_unsorted_image["imgUrl"])
-    encoded_image = base64.b64encode(img_content).decode('utf-8')
-    return render_template('index.html', img_content=encoded_image)
+
+    img_content = None
+    is_video_content = None
+
+    if next_unsorted_image["imgUrl"]:
+        downloaded_img = download_img(next_unsorted_image["imgUrl"])
+        img_content = base64.b64encode(downloaded_img).decode('utf-8')
+
+    return render_template('index.html', img_content=img_content, is_video=is_video_content)
 
 
 if __name__ == '__main__':

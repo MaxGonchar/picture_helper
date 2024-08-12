@@ -26,8 +26,8 @@
             gap: 10px;
         }
         img {
-            width: auto;
-            max-height: 900px;
+            max-width: 450px;
+            max-height: 450px;
         }
         button {
             width: 100px;
@@ -55,8 +55,15 @@
             <a href="{{ session.img_url }}" target="_blank">____to site____</a>
         </div>
         <div>
-            <!-- <img id="myImage" src="{{ session.next_unsorted_image['imgUrl'] }}"> -->
-            <img id="myImage" src="data:image/jpg;base64, {{ img_content }}">
+            {% if is_video %}
+                <p>Video</p>
+            {% endif %}
+
+            {% if img_content %}
+                <img id="myImage" src="data:image/jpg;base64, {{ img_content }}">
+            {% else %}
+                <p>No image</p>
+            {% endif %}
         </div>
     </div>
 </body>

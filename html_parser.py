@@ -9,7 +9,8 @@ def parse_html(html: str) -> ParsedImgType:
     return {
         "id": _get_id(soup),
         "tags": _get_tags(soup),
-        "imgUrl": _get_img_url(soup)
+        "imgUrl": _get_img_url(soup),
+        "isVideo": _is_video(soup),
     }
 
 
@@ -31,4 +32,9 @@ def _get_id(soup: BeautifulSoup) -> str:
 
 def _get_img_url(soup: BeautifulSoup) -> str:
     img_el = soup.find("img", {"id": "image"})
-    return img_el["src"]
+    if img_el:
+        return img_el["src"]
+
+
+def _is_video(soup: BeautifulSoup) -> bool:
+    return bool(soup.find("video"))
