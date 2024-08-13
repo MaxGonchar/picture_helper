@@ -106,6 +106,20 @@ class UnsortedImages:
         else:
             raise ValueError(f"Unknown order_by value: {order_by}")
     
+    def get_n_next(self, n: int, order_by: str | None = None) -> list[dict]:
+        with open(self.path, "r") as f:
+            data = json.load(f)
+
+        self.total = len(data)
+
+        if order_by is None:
+            return data[:n]
+        elif order_by == "likelihood":
+            data = sorted(data, key=lambda x: x["likelihood"], reverse=True)
+            return data[:n]
+        else:
+            raise ValueError(f"Unknown order_by value: {order_by}")
+    
     def delete_unsorted_image(self, img: dict):
         with open(self.path, "r") as file:
             data = json.load(file)

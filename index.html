@@ -10,24 +10,30 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
-            width: 200px;
+            width: 150px;
             height: 100vh;
             background-color: #f1f1f1;
             padding: 20px;
         }
         .prediction {
+            margin: 0;
+        }
+        .meta {
             font-size: 20px;
-            margin-bottom: 20px;
-            color: {{ 'green' if session.next_unsorted_image['isGood'] else 'red' }};
+            display: flex;
+            gap: 80px;
+        }
+        .input {
+            margin: 0px;
         }
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-column-gap: 20px;
         }
         img {
-            max-width: 450px;
-            max-height: 450px;
+            max-width: 400px;
+            max-height: 400px;
         }
         button {
             width: 100px;
@@ -43,28 +49,41 @@
 <body>
     <div class="main">
         <div class="left-sidebar">
-            <p>ID: {{ session.next_unsorted_image['id'] }}</p>
-            {% if session.total_unsorted_images %}
-                <p>Total: {{ session.total_unsorted_images }}</p>
-            {% endif %}
-            <p class="prediction">{{ session.next_unsorted_image['isGood'] }} {{ session.next_unsorted_image['likelihood'] }}</p>
-            <form method="post" action="{{url_for('index')}}">
-                <button name="feedback" value="good" style="background-color: green;">GOOD</button>
-                <button name="feedback" value="bad" style="background-color: red;">BAD</button>
-            </form>
-            <a href="{{ session.img_url }}" target="_blank">____to site____</a>
+            <p>Total: {{ total_unsorted_images }}</p>
+            <button form="imgs-form">Submit</button>
         </div>
-        <div>
-            {% if is_video %}
-                <p>Video</p>
-            {% endif %}
 
-            {% if img_content %}
-                <img id="myImage" src="data:image/jpg;base64, {{ img_content }}">
-            {% else %}
-                <p>No image</p>
-            {% endif %}
-        </div>
+        <form id="imgs-form" method="post" action="{{url_for('index')}}">
+            {% for img in imgs %}
+                <div class="form-item">
+                    <a href="{{ img['pageURL'] }}" target="_blank">
+                        <div class="content">
+                            {% if img['isVideo'] %}
+                                <p>Video</p>
+                            {% endif %}
+                            {% if img['img_content'] %}
+                                <img id="myImage" src="data:image/jpg;base64, {{ img['img_content'] }}">
+                            {% else %}
+                                <p>No image</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="meta">
+                        <div>
+                            <p class="prediction" style="color: {{ 'green' if img['isGood'] else 'red' }};">{{ img['isGood'] }} {{ img['likelihood'] }}</p>
+                        </div>
+                        <div class="input">
+                            <fieldset>
+                                <input type="radio" name="{{ img['id'] }}" value="bad" checked>
+                                <label for="bad" style="color: red;">Bad</label>
+                                <input type="radio" name="{{ img['id'] }}" value="good">
+                                <label for="good" style="color: green;">Good</label>
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </form>
     </div>
 </body>
 

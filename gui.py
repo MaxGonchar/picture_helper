@@ -33,31 +33,38 @@ def index():
     unsorted_images = UnsortedImages()
 
     if request.method == 'POST':
-        is_good = request.form["feedback"] == "good"
-        feedback_img = session["next_unsorted_image"]
-        img = prepare_sorted_img(feedback_img, is_good)
-        save_image(img)
-        update_tags(list(img.values())[0]["tags"])
-        delete_unsorted_image(feedback_img)
+
+        for unsorted_img in session["images_to_handle_on_be"]:
+            is_good = request.form[str(unsorted_img["id"])] == "good"
+            feedback_img = unsorted_img
+            img = prepare_sorted_img(feedback_img, is_good)
+            save_image(img)
+            update_tags(list(img.values())[0]["tags"])
+            delete_unsorted_image(feedback_img)
+
         return redirect(url_for('index'))
 
-    next_unsorted_image = unsorted_images.get_next(order_by="likelihood")
+    next_unsorted_images = unsorted_images.get_n_next(6, order_by="likelihood")
 
-    if not next_unsorted_image:
-        abort(404)
+    total_unsorted_images = unsorted_images.total
+    session["images_to_handle_on_be"] = next_unsorted_images
 
-    session["next_unsorted_image"] = next_unsorted_image
-    session["total_unsorted_images"] = unsorted_images.total
-    session["img_url"] = URL.format(id=next_unsorted_image["id"])
+    imgs = []
+    for img in next_unsorted_images:
+        img = {
+            **img,
+            "pageURL": URL.format(id=img["id"]),
+            "img_content": None
+        }
 
-    img_content = None
-    is_video_content = None
+        if img["imgUrl"]:
+            downloaded_img = download_img(img["imgUrl"])
+            img_content = base64.b64encode(downloaded_img).decode('utf-8')
+            img["img_content"] = img_content
 
-    if next_unsorted_image["imgUrl"]:
-        downloaded_img = download_img(next_unsorted_image["imgUrl"])
-        img_content = base64.b64encode(downloaded_img).decode('utf-8')
+        imgs.append(img)
 
-    return render_template('index.html', img_content=img_content, is_video=is_video_content)
+    return render_template('index.html', imgs=imgs, total_unsorted_images=total_unsorted_images)
 
 
 if __name__ == '__main__':
