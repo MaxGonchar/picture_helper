@@ -7,7 +7,16 @@ from dataclasses import dataclass
 import joblib
 from sklearn.linear_model import LogisticRegression
 
-from configs import DATA_FOLDER, IMGS_FOLDER, TAGS_FILE, ID_FILE, MODEL_FILE, UNSORTED_IMGS_FILE, TAGS_USED_FOR_TRAINING_FILE
+from configs import (
+    DATA_FOLDER,
+    IMGS_FOLDER,
+    TAGS_FILE,
+    ID_FILE,
+    MODEL_FILE,
+    UNSORTED_IMGS_FILE,
+    TAGS_USED_FOR_TRAINING_FILE,
+    SHUFFLED_ID_FILE
+)
 from utils import get_img_id, generate_file_name
 
 
@@ -28,6 +37,22 @@ class NextImgID:
         if not exc_type:
             with open(join(DATA_FOLDER, ID_FILE), "w") as file:
                 file.write(str(self.id))
+        else:
+            raise exc_type(exc_val)
+
+
+class NextShuffledImgID:
+    def __enter__(self):
+        with open(join(DATA_FOLDER, SHUFFLED_ID_FILE), "r") as file:
+            self.ids = json.load(file)
+        self.id = self.ids[0]
+        return self.id
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.ids.remove(self.id)
+        if not exc_type:
+            with open(join(DATA_FOLDER, SHUFFLED_ID_FILE), "w") as file:
+                json.dump(self.ids, file)
         else:
             raise exc_type(exc_val)
 
