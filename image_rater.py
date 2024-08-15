@@ -11,7 +11,12 @@ SLEEP_TIME = 1
 
 
 def rate_image():
-    with dao.NextImgID() as img_id:
+    with dao.NextShuffledImgID() as img_id:
+
+        if not img_id:
+            print("No more image ids to rate")
+            return
+
         url = URL.format(id=img_id)
 
         if html := get_html(url):
@@ -22,7 +27,8 @@ def rate_image():
 
 
 def main(number: int) -> None:
-    for _ in range(number):
+    for i in range(number):
+        print(i + 1, end=" ")
         rate_image()
         sleep(SLEEP_TIME)
 
