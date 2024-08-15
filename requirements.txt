@@ -1,6 +1,8 @@
 requests==2.32.2
 beautifulsoup4==4.12.3
 
+elasticsearch==8.15.0
+
 jupyter==1.0.0
 numpy==2.0.1
 pandas==2.2.2
