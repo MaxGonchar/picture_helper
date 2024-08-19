@@ -44,7 +44,7 @@ def index():
 
         return redirect(url_for('index'))
 
-    next_unsorted_images = unsorted_images.get_n_next(6, order_by="likelihood")
+    next_unsorted_images = unsorted_images.get_n_next(8, order_by="likelihood")
 
     total_unsorted_images = unsorted_images.total
     session["images_to_handle_on_be"] = next_unsorted_images

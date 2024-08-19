@@ -1,0 +1,12 @@
+ALL INDEXES
+
+GET _cat/indices?v
+-----------------------------------------------------
+SEARCH ALL
+
+GET /_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
