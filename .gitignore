@@ -11,3 +11,5 @@ dev_script.py
 
 images.csv
 model.joblib
+
+.env
