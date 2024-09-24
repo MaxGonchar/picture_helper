@@ -1,0 +1,35 @@
+BACK UP HANDLING
+=====================================================
+Register BackUp repo locally
+-----------------------------------------------------
+PUT /_snapshot/my_backup
+  {
+  "type": "fs",
+  "settings": {
+  "location": "/backup/my_backup"
+  }
+}
+-----------------------------------------------------
+Get BackUp repos
+-----------------------------------------------------
+GET /_snapshot
+GET /_snapshot/my_backup
+-----------------------------------------------------
+Do BackUp
+-----------------------------------------------------
+PUT /_snapshot/my_backup/my_snapshot
+-----------------------------------------------------
+
+
+ALL INDEXES
+
+GET _cat/indices?v
+-----------------------------------------------------
+SEARCH ALL
+
+GET /_search
+{
+  "query": {
+    "match_all": {}
+  }
+}

@@ -28,12 +28,12 @@
         }
         form {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
             grid-column-gap: 20px;
         }
         img {
-            max-width: 400px;
-            max-height: 400px;
+            max-width: 380px;
+            max-height: 380px;
         }
         button {
             width: 100px;
@@ -42,6 +42,11 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+        fieldset {
+            border: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
         }
     </style>
 </head>
@@ -70,14 +75,21 @@
                     </a>
                     <div class="meta">
                         <div>
-                            <p class="prediction" style="color: {{ 'green' if img['isGood'] else 'red' }};">{{ img['isGood'] }} {{ img['likelihood'] }}</p>
+                            <p class="prediction" style="color: {{ 'green' if img['isGood'] else 'red' }};">{{ img['likelihood'] }}</p>
                         </div>
                         <div class="input">
                             <fieldset>
                                 <input type="radio" name="{{ img['id'] }}" value="bad" checked>
                                 <label for="bad" style="color: red;">Bad</label>
+
                                 <input type="radio" name="{{ img['id'] }}" value="good">
                                 <label for="good" style="color: green;">Good</label>
+
+                                <input type="radio" name="{{ img['id'] }}" value="nice">
+                                <label for="nice" style="color: blue;">Nice</label>
+
+                                <input type="radio" name="{{ img['id'] }}" value="interesting">
+                                <label for="interesting" style="color: orange;">Interesting</label>
                             </fieldset>
                         </div>
                     </div>

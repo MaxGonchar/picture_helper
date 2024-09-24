@@ -1,7 +1,6 @@
 from copy import deepcopy
-from pprint import pprint
 import base64
-from flask import Flask, render_template, request, session, redirect, url_for, abort
+from flask import Flask, render_template, request, session, redirect, url_for
 import requests
 
 from configs import URL
@@ -13,11 +12,12 @@ app = Flask(__name__, template_folder='.')
 app.secret_key = b'sjdhajhdkjahskdjhakjshdkajhsdkjahskjdh'
 
 
-def prepare_sorted_img(unsorted_image: UnsortedImgType, is_good: bool) -> dict:
+def prepare_sorted_img(unsorted_image: UnsortedImgType, is_good: bool, opinion: str) -> dict:
     img = {
         unsorted_image["id"]: {
             "tags": deepcopy(unsorted_image["tags"]),
-            "isGood": is_good
+            "isGood": is_good,
+            "opinion": [opinion]
         }
     }
     return img
@@ -33,18 +33,17 @@ def index():
     unsorted_images = UnsortedImages()
 
     if request.method == 'POST':
-
         for unsorted_img in session["images_to_handle_on_be"]:
             is_good = request.form[str(unsorted_img["id"])] == "good"
-            feedback_img = unsorted_img
-            img = prepare_sorted_img(feedback_img, is_good)
+            opinion = request.form[str(unsorted_img["id"])]
+            img = prepare_sorted_img(unsorted_img, is_good, opinion)
             save_image(img)
             update_tags(list(img.values())[0]["tags"])
-            delete_unsorted_image(feedback_img)
+            delete_unsorted_image(unsorted_img)
 
         return redirect(url_for('index'))
 
-    next_unsorted_images = unsorted_images.get_n_next(6, order_by="likelihood")
+    next_unsorted_images = unsorted_images.get_n_next(8)
 
     total_unsorted_images = unsorted_images.total
     session["images_to_handle_on_be"] = next_unsorted_images
