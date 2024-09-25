@@ -22,7 +22,7 @@ class Images:
             "isGood": image.isGood
         }
         index = self.generate_index_name(image.id)
-        self.es.index(index, image.id, doc)
+        self.es.index_doc(index, image.id, doc)
 
     @staticmethod
     def generate_index_name(id_: int) -> str:

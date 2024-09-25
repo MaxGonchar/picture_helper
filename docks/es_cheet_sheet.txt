@@ -25,6 +25,8 @@ ALL INDEXES
 
 GET _cat/indices?v
 -----------------------------------------------------
+
+
 SEARCH ALL
 
 GET /_search
@@ -32,4 +34,22 @@ GET /_search
   "query": {
     "match_all": {}
   }
+}
+-----------------------------------------------------
+
+
+GET RANDOM DOCUMENT
+
+GET imgs*/_search
+{
+  "query": {
+    "function_score": {
+      "functions": [
+        {
+          "random_score": {}
+        }
+      ]
+    }
+  },
+  "size": 1
 }
