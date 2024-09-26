@@ -31,3 +31,18 @@ class Id:
             self.domain.get_es_ids_index_name(id_),
             id_
         )
+
+
+class NextShuffledImgID:
+    def __init__(self, domain: Domain) -> None:
+        self.id_manager = Id(domain)
+
+    def __enter__(self):
+        self.id = self.id_manager.get_random_id()["id"]
+        return self.id
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if not exc_type:
+            self.id_manager.delete_id(self.id)
+        else:
+            raise exc_type(exc_val)

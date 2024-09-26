@@ -6,12 +6,13 @@ import dao
 from img_data_transformer import prepare_unsorted_img
 from time import sleep
 from termcolor import colored
+from data_repo.id import NextShuffledImgID, Domain
 
 SLEEP_TIME = 1
 
 
 def rate_image():
-    with dao.NextShuffledImgID() as img_id:
+    with NextShuffledImgID(Domain()) as img_id:
 
         if not img_id:
             print("No more image ids to rate")
