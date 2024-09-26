@@ -1,4 +1,1 @@
-1. Create indexes in ES to store unprocessed images ids (up tp 10 000 000)
-  - one index for one million ids
-  - ids should be got randomly
-  - id should be deleted from processing
+Migrate unsorted images to es

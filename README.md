@@ -20,3 +20,7 @@ execute `python backup.py -r`
 
 #### open gui
 `python gui.py`
+
+#### generate ids if pictures to analyze
+`python ids_generator.py -s <int> -e <int>`
+for example `python ids_generator.py -s 1000000 -e 1999999`
