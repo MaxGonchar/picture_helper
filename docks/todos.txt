@@ -21,10 +21,10 @@ steps:
         - delete id
         - remove index if the last id was deleted
 
-- move existing ids to ES
-  - on time script
+      - move existing ids to ES
+        - on time script
 
-- script to generate new ids
-  - to be run from command line
+      - script to generate new ids
+        - to be run from command line
 
 - migrate to using ids from ES
