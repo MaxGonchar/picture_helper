@@ -1,1 +1,55 @@
-Migrate unsorted images to es
+Picture assessment
+
+When tha page is open: GET
+
+1. get random ids from es
+
+2. download pages by ids
+    - take into account potential failures
+    - if 302 - consider as processed
+    - if 500 - try another id
+
+3. parse pages, extract:
+    - picture link (if content is appropriate)
+    - tags
+        - by categories:
+            copyright
+            character
+            artist
+            general
+            meta
+    - statistics:
+        - posted
+        - posted_by
+        - source
+
+5. download pictures
+
+4. store prepared content in file (es index)
+    content should be easily associated with id
+
+6. prepare content for UI
+    - id
+    - picture (if present)
+    - options for opinion:
+        - bad:         I don't want to see it again
+        - neutral:     not interesting
+        - funny:       nothing special, just funny
+        - nice:        impressed by painting (style colors technique)
+        - interesting: interesting plot, idea
+
+        can have more than one opinion if they're not bad
+
+take opinion from UI: POST
+
+1. validate opinion
+
+2. get saved pictures content from file (es)
+
+3. update content with opinion
+
+4. store pictures in es
+
+5. delete processed ids
+
+6. redirect to GET page
