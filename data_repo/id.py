@@ -21,17 +21,32 @@ class Id:
         } for id_ in ids)
         self.es.batch_index_data(ids_data)
     
-    def get_random_id(self) -> str:
-        return self.es.get_random_doc(
-            f"{self.domain.get_ids_index_prefix()}*"
+    def get_random_ids(self, amount: int) -> list[str]:
+        docs = self.es.get_random_doc(
+            f"{self.domain.get_ids_index_prefix()}*", amount
         )
+        res = [doc["_source"]["id"] for doc in docs]
+        return res
     
     def delete_id(self, id_: str) -> None:
         self.es.delete_doc(
             self.domain.get_es_ids_index_name(id_),
             id_
         )
-
+    
+    def delete_ids(self, ids: list[str]) -> None:
+        # https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-delete-by-query.html
+        query = {
+            "query": {
+                "terms": {
+                    "_id": ids
+                }
+            }
+        }
+        self.es.delete_by_query(
+            f"{self.domain.get_ids_index_prefix()}*",
+            query
+        )
 
 class NextShuffledImgID:
     def __init__(self, domain: Domain) -> None:

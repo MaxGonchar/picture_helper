@@ -14,7 +14,7 @@ class ESIndexes:
     
     def get_index_data(self, index_name: str, size: int) -> Generator[dict]:
         query = {"match_all": {}}
-        sort = {"id": "asc"}
+        sort = {"id.keyword": "asc"}
         return self.es.get_index_data(index_name, size, query, sort)
 
     def backup_index_data_to_file(self, index_name: str, file: TextIO, batch_size: int) -> None:

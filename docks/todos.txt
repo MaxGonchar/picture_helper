@@ -1,1 +1,3 @@
-Migrate unsorted images to es
+https://freshman.tech/web-development-with-go/
+https://medium.com/insiderengineering/concurrent-http-requests-in-golang-best-practices-and-techniques-f667e5a19dea
+https://www.zenrows.com/blog/golang-html-parser#prerequisites
